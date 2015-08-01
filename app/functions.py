@@ -1,52 +1,65 @@
 from app import app, status
-from app.models import Song
-
+# from app.models import Song
+from constants import NO_ACTIVE_SESSIONS, ERR_NO_SESSION, NOTHING_TO_PLAY
+from errors import FlowException
+from threading import Thread, ThreadError
 import subprocess
 
 
 def run_cmd(cmd):
     """
+    This method runs command in linux console of Raspberry Pi
 
-    :rtype : object
+    :param cmd: The command to be executed
+    :return: The output of command in console
     """
     app.logger.debug('Command:' + cmd)
-    p = subprocess.Popen(cmd, shell=True)
-    output, err = p.communicate()
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    output = p.communicate()[0]
     app.logger.debug('Output:' + output)
-    return output, err
+    return output
 
 
-# while True:
-#     out = p.stderr.read(1)
-#     if out == '' and p.poll() != None:
-#         break
-#     if out != '':
-#         sys.stdout.write(out)
-#         sys.stdout.flush()
+def fetch_songs(path):
+    """
+    This method is used to fetch songs from the path and add its ID
+    :param path:
+    :return:
+    """
 
+    return path
+
+def get_metadata(file):
+    import eyed3
+    file_details = eyed3.load(file)
 
 def start_daemon():
     """
     This function starts the Alsaplayer in Daemon mode.
-    :return:
+    :return: True if execution successful
     """
     try:
-        out = run_cmd('alsaplayer -i daemon &')
+        cmd = 'alsaplayer -i daemon'
+        daemon_thr = Thread(target=run_cmd, args=(cmd,))
+        daemon_thr.start()
         status['startd'] = True
         status['paused'] = True
         return True
-    except:
-        app.logger.error("Error Occured: start_daemon")
+    except ThreadError:
+        app.logger.error("Error Occurred: start_daemon")
         return False
 
 
 def queue_tracks(path):
     try:
         out = run_cmd('alsaplayer -e ' + path)
-        status['paused'] = False
-        return True
-    except:
-        app.logger.error("Error Occured: queue_tracks")
+        if out == NO_ACTIVE_SESSIONS:
+            raise FlowException(ERR_NO_SESSION)
+        else:
+            status['paused'] = False
+            return True
+    except FlowException as e:
+        app.logger.error("Error Occurred: queue_tracks" + e.message)
         return False
 
 
@@ -56,7 +69,7 @@ def start_main():
 
 def pause_unpause():
     out = run_cmd('alsaplayer --pause')
-    if out == 'No active sessions' or out == 'Nothing to play.':
+    if NO_ACTIVE_SESSIONS in out or NOTHING_TO_PLAY in out:
         status['paused'] = True
         return False
     else:
@@ -65,8 +78,12 @@ def pause_unpause():
 
 
 def next_song():
+    """
+    This method is to jump to next song
+    :return: True if successfully changed the song to next
+    """
     out = run_cmd('alsaplayer --next')
-    if out == 'No active sessions' or out == 'Nothing to play.':
+    if out in NO_ACTIVE_SESSIONS or out in '':
         status['paused'] = True
         return False
     else:
@@ -84,8 +101,18 @@ def stop():
 
 
 def jump_to_track(track_number):
-    pass
+    """
+
+    :param track_number:
+    :return:
+    """
+    return track_number
 
 
-def volume(volume_level):  # Should be in range 1 - 100
-    pass
+def volume(volume_level):
+    """
+
+    :param volume_level: Represents Volume level and it should be in range 1 - 100
+    :return:
+    """
+    return volume_level
