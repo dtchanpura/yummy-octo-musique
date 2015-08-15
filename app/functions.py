@@ -1,5 +1,5 @@
-from app import app, status
-# from app.models import Song
+from app import app, status, db
+from app.models import Song
 from constants import NO_ACTIVE_SESSIONS, ERR_NO_SESSION, NOTHING_TO_PLAY
 from errors import FlowException
 from threading import Thread, ThreadError
@@ -9,7 +9,6 @@ import subprocess
 def run_cmd(cmd):
     """
     This method runs command in linux console of Raspberry Pi
-
     :param cmd: The command to be executed
     :return: The output of command in console
     """
@@ -23,15 +22,32 @@ def run_cmd(cmd):
 def fetch_songs(path):
     """
     This method is used to fetch songs from the path and add its ID
-    :param path:
-    :return:
+    :param path: Path where the files are stored
+    :return: True if successfully fetched
     """
+    try:
+        import os
+        file_list = run_cmd('ls ' + path)
+        for file_ in file_list:
+            file_data = get_metadata(os.path.join(path, file_))
+            db.session.add(file_data)
+        db.session.commit()
+        return True
+    except Exception as e:
+        app.logger.error('Error Occurred: fetch_songs, ' + e.message)
+        return False
 
-    return path
 
-def get_metadata(file):
+def get_metadata(file_name):
+    """
+    This method gets the metadata from file
+    :param file_name: The input file for fetching metadata from that file
+    :return: Returns the metadata for particular file depending upon the file_name
+    """
     import eyed3
-    file_details = eyed3.load(file)
+    file_details = eyed3.load(file_name)
+    return Song(file_details)
+
 
 def start_daemon():
     """
