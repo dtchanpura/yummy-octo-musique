@@ -63,27 +63,6 @@ def queue():
     return jsonify(data)
 
 
-# todo remove this service add it to action
-@app.route('/volume', methods=['GET', 'POST'])
-def volume():
-    data = {}
-    flag = functions.get_daemon_status()
-    if request.method == 'GET':
-        status_ = functions.get_status()
-        volume_ = functions.get_volume(status_['status'])
-        data['ok'] = True
-        data['daemon'] = flag
-        data['return'] = {'volume': volume_}
-    if request.method == 'POST':
-        if 'volume' in request.json:
-            if functions.volume(request.json['volume']):
-                data['ok'] = True
-                data['daemon'] = flag
-            else:
-                data['ok'] = False
-    return jsonify(data), 200
-
-
 @app.route('/action', methods=['POST'])
 def do_action():
     data = {'ok': False}
@@ -95,6 +74,9 @@ def do_action():
             data['ok'] = functions.next_song()
         elif action == 'previous':
             data['ok'] = functions.prev_song()
+        elif action == 'volume':
+            data['ok'] = functions.volume(request.json['volume'])
+    data['daemon'] = functions.get_daemon_status()
     return jsonify(data), 200
 
 
