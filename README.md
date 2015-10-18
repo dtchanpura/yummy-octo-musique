@@ -13,10 +13,10 @@ Right now it is using simple commands to control the alsaplayer in terminal but 
 Services:
 
 /start No arguments or JSON
-	To Start the alsaplayer daemon
+    To Start the alsaplayer daemon
 
 /play No arguments or JSON
-	To start playing 
+    To start playing 
 
 
 

@@ -1,11 +1,11 @@
-from flask import jsonify, request
+from flask import jsonify, request, Response
 
 from app import app, db
 from app import functions
 from app.models import User
 
 
-@app.route('/register')
+@app.route('/register', methods=['POST'])
 def register():
     if 'username' not in request.json or 'password' not in request.json:
         return jsonify({'ok': False, 'error': "username or password not found"}), 400
@@ -27,18 +27,23 @@ def status():
     return jsonify(data), 200
 
 
-@app.route('/start')
+@app.route('/start', methods=['POST'])
 def start():
-    flag = functions.get_daemon_status()
+    return_type = check_token(request)
+    if return_type is not None:
+        return return_type
     data = {'ok': False}
     if functions.start_daemon():
         data['ok'] = True
-        data['daemon'] = flag
+        data['daemon'] = functions.get_daemon_status()
     return jsonify(data), 200
 
 
-@app.route('/play')
+@app.route('/play', methods=['GET', 'POST'])
 def play():
+    return_type = check_token(request)
+    if return_type is not None:
+        return return_type
     data = {'ok': False}
     flag = functions.get_daemon_status()
     if not flag:
@@ -51,6 +56,10 @@ def play():
 
 @app.route('/queue', methods=['POST'])
 def queue():
+    return_type = check_token(request)
+    if return_type is not None:
+        return return_type
+
     flag = functions.get_daemon_status()
     data = {'ok': False}
     if 'path' not in request.json:
@@ -65,6 +74,10 @@ def queue():
 
 @app.route('/action', methods=['POST'])
 def do_action():
+    return_type = check_token(request)
+    if return_type is not None:
+        return return_type
+
     data = {'ok': False}
     if 'action' in request.json:
         action = request.json['action']
@@ -80,11 +93,29 @@ def do_action():
     return jsonify(data), 200
 
 
-@app.route('/quit')
+@app.route('/quit', methods=['GET', 'POST'])
 def quit_daemon():
+    return_type = check_token(request)
+    if return_type is not None:
+        return return_type
+
     data = {'ok': False}
     flag = functions.get_daemon_status()
     if functions.quit_daemon():
         data['ok'] = True
         data['daemon'] = flag
     return jsonify(data), 200
+
+
+@app.route('/album_art')
+def get_album_art():
+    image_response, mime_type = functions.get_album_art(functions.get_status()['status']['current_track']['path'])
+    return Response(response=image_response, mimetype=mime_type)
+
+
+def check_token(request_):
+    if 'token' not in request_.json:
+        return jsonify({'ok': False, 'error': 'token required'})
+    query = User.query.filter(User.token == request_.json['token'])
+    if query.count() == 0:
+        return jsonify({'ok': False, 'error': 'invalid token'})

@@ -53,11 +53,15 @@ def get_metadata(file_name):
 
 
 def get_album_art(file_name):
-    jpeg_byte_string = None
+    # jpeg_byte_string = None
+    mime_ = 'image/png'
     images = get_metadata(file_name).tag.images
     if len(images) > 0:
         jpeg_byte_string = images[0].image_data
-    return jpeg_byte_string
+        mime_ = images[0].mime_type
+    else:
+        jpeg_byte_string = open('app/static/images/no_album_art.png', 'r').read()
+    return jpeg_byte_string, mime_
 
 
 def start_daemon():
