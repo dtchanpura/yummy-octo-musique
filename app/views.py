@@ -63,6 +63,7 @@ def queue():
     return jsonify(data)
 
 
+# todo remove this service add it to action
 @app.route('/volume', methods=['GET', 'POST'])
 def volume():
     data = {}

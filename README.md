@@ -8,3 +8,15 @@ Right now it is using simple commands to control the alsaplayer in terminal but 
 
 1. alsaplayer Github repo for python module
 1. libboost for building python module
+
+
+Services:
+
+/start No arguments or JSON
+	To Start the alsaplayer daemon
+
+/play No arguments or JSON
+	To start playing 
+
+
+
