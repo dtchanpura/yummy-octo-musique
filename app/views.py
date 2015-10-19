@@ -8,7 +8,7 @@ from app.models import User
 @app.route('/register', methods=['POST'])
 def register():
     if 'username' not in request.json or 'password' not in request.json:
-        return jsonify({'ok': False, 'error': "username or password not found"}), 400
+        return jsonify({'ok': False, 'error': "username or password not found"}), 200
     user = User(request.json['username'], request.json['password'])
     try:
         db.session.add(user)
@@ -16,7 +16,7 @@ def register():
         return jsonify({'ok': True, 'username': user.username, 'token': user.token}), 200
     except Exception as e:
         app.logger.error(e)
-        return jsonify({'ok': False, 'error': "error while creating user"}), 400
+        return jsonify({'ok': False, 'error': "error while creating user"}), 200
 
 
 @app.route('/status')
@@ -111,6 +111,21 @@ def quit_daemon():
 def get_album_art():
     image_response, mime_type = functions.get_album_art(functions.get_status()['status']['current_track']['path'])
     return Response(response=image_response, mimetype=mime_type)
+
+
+@app.route('/get_token', methods=['POST'])
+def get_token():
+    import hashlib
+    if 'username' not in request.json or 'password' not in request.json:
+        return jsonify({'ok': False, 'error': 'username or password not found'})
+    query = User.query.filter(User.username == request.json['username'])
+    if query.count() == 0:
+        return jsonify({'ok': False, 'error': 'username or password invalid'})
+    user = query.all()[0]
+    pass_req = hashlib.sha256(request.json['password'] + user.salt_string).hexdigest()
+    if pass_req != user.password:
+        return jsonify({'ok': False, 'error': 'username or password invalid'})
+    return jsonify({'ok': True, 'token': user.token, 'username': user.username})
 
 
 def check_token(request_):
