@@ -1,9 +1,9 @@
 from flask import jsonify, request, Response
 from flask_cors import cross_origin
 
-from app import app, db
-from app import functions
-from app.models import User
+from flaskapp import app, db
+from flaskapp import functions
+from flaskapp.models import User
 
 
 @app.route('/register', methods=['POST'])

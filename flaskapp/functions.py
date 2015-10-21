@@ -1,7 +1,7 @@
 from threading import Thread, ThreadError
 import subprocess
 
-from app import app, db
+from flaskapp import app, db
 from constants import NO_ACTIVE_SESSIONS, SESSION, NOTHING_TO_PLAY, CURRENT_TRACK
 from constants import ERR_NO_SESSION, ERR_NO_TRACKS
 from errors import FlowException

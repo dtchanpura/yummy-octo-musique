@@ -1,4 +1,4 @@
-from app import db
+from flaskapp import db
 from constants import ALPHABET
 
 

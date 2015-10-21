@@ -1,7 +1,10 @@
-from flask import Flask
-from flask.ext.sqlalchemy import SQLAlchemy
 import logging
 from logging.handlers import RotatingFileHandler
+
+from flask import Flask
+
+from flask.ext.sqlalchemy import SQLAlchemy
+
 # import os
 
 app = Flask(__name__)
@@ -17,4 +20,4 @@ app.logger.addHandler(file_handler)
 app.logger.setLevel(logging.INFO)
 app.logger.info('music player backend startup')
 
-from app import views, models
+from flaskapp import views, models
