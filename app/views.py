@@ -1,4 +1,5 @@
 from flask import jsonify, request, Response
+from flask_cors import cross_origin
 
 from app import app, db
 from app import functions
@@ -6,6 +7,7 @@ from app.models import User
 
 
 @app.route('/register', methods=['POST'])
+@cross_origin()
 def register():
     if 'username' not in request.json or 'password' not in request.json:
         return jsonify({'ok': False, 'error': "username or password not found"}), 200
@@ -19,7 +21,8 @@ def register():
         return jsonify({'ok': False, 'error': "error while creating user"}), 200
 
 
-@app.route('/status')
+@app.route('/status', methods=['GET'])
+@cross_origin()
 def status():
     flag = functions.get_daemon_status()
     status_ = functions.get_status()
@@ -27,7 +30,8 @@ def status():
     return jsonify(data), 200
 
 
-@app.route('/start', methods=['POST'])
+@app.route('/start_daemon', methods=['POST'])
+@cross_origin()
 def start():
     return_type = check_token(request)
     if return_type is not None:
@@ -40,6 +44,7 @@ def start():
 
 
 @app.route('/play', methods=['GET', 'POST'])
+@cross_origin()
 def play():
     return_type = check_token(request)
     if return_type is not None:
@@ -55,6 +60,7 @@ def play():
 
 
 @app.route('/queue', methods=['POST'])
+@cross_origin()
 def queue():
     return_type = check_token(request)
     if return_type is not None:
@@ -73,6 +79,7 @@ def queue():
 
 
 @app.route('/action', methods=['POST'])
+@cross_origin()
 def do_action():
     return_type = check_token(request)
     if return_type is not None:
