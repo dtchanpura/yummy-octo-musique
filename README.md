@@ -1,4 +1,4 @@
-# Yummy Octo Musique
+# Yummy Octo Musique [![Build Status](https://travis-ci.org/dtchanpura/yummy-octo-musique.svg?branch=master)](https://travis-ci.org/dtchanpura/yummy-octo-musique)
 
 Music Player for Remote devices.
 
