@@ -3,7 +3,8 @@ from logging.handlers import RotatingFileHandler
 
 from flask import Flask
 
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
+
 
 # import os
 

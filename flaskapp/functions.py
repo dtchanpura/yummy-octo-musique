@@ -4,7 +4,7 @@ import subprocess
 from flaskapp import app, db
 from flaskapp.constants import NO_ACTIVE_SESSIONS, SESSION, NOTHING_TO_PLAY, CURRENT_TRACK
 from flaskapp.constants import ERR_NO_SESSION, ERR_NO_TRACKS
-from errors import FlowException
+from flaskapp.errors import FlowException
 
 daemon_thr = None
 

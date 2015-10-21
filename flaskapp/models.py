@@ -1,5 +1,5 @@
 from flaskapp import db
-from constants import ALPHABET
+from flaskapp.constants import ALPHABET
 
 
 class User(db.Model):
