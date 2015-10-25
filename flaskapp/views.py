@@ -30,7 +30,7 @@ def status():
     return jsonify(data), 200
 
 
-@app.route('/start_daemon', methods=['POST'])
+@app.route('/start_daemon', methods=['POST', 'OPTIONS'])
 @cross_origin()
 def start():
     return_type = check_token(request)
@@ -73,7 +73,6 @@ def queue():
     if flag:
         return_ = functions.queue_tracks(request.json['path'])
         data['ok'] = True
-        data['daemon'] = flag
         data['return'] = return_
     return jsonify(data)
 
@@ -101,6 +100,7 @@ def do_action():
 
 
 @app.route('/quit', methods=['GET', 'POST'])
+@cross_origin()
 def quit_daemon():
     return_type = check_token(request)
     if return_type is not None:
@@ -116,11 +116,28 @@ def quit_daemon():
 
 @app.route('/album_art')
 def get_album_art():
-    image_response, mime_type = functions.get_album_art(functions.get_status()['status']['current_track']['path'])
+    image_response, mime_type = functions.get_album_art()
     return Response(response=image_response, mimetype=mime_type)
+#    except Exception as e:
+#        app.logger.error(e.message)
+#        jpeg_byte_string = open('flaskapp/static/images/no_album_art.png', 'r').read()
+#        return Response(jpeg_byte_string, 'image/png')
+
+
+@app.route('/get_files', methods=['POST'])
+@cross_origin()
+def get_files():
+    return_type = check_token(request)
+    if return_type is not None:
+        return return_type
+    if 'path' not in request.json:
+        return jsonify({'ok': False, 'error': 'path not found in request'})
+    files_dict, dirs_dict = functions.get_files_in_path(request.json['path'])
+    return jsonify({'ok': True, 'files': files_dict, 'dirs': dirs_dict})
 
 
 @app.route('/get_token', methods=['POST'])
+@cross_origin()
 def get_token():
     import hashlib
     if 'username' not in request.json or 'password' not in request.json:

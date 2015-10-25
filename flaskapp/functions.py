@@ -52,19 +52,19 @@ def get_metadata(file_name):
     return file_details
 
 
-def get_album_art(file_name):
+def get_album_art():
     # jpeg_byte_string = None
     mime_ = 'image/png'
     try:
-        images = get_metadata(file_name).tag.images
+        images = get_metadata(get_status()['status']['current_track']['path']).tag.images
         if len(images) > 0:
             jpeg_byte_string = images[0].image_data
             mime_ = images[0].mime_type
         else:
-            jpeg_byte_string = open('app/static/images/no_album_art.png', 'r').read()
+            jpeg_byte_string = open('flaskapp/static/images/no_album_art.png', 'r').read()
     except Exception as e:
         app.logger.error(e)
-        jpeg_byte_string = open('app/static/images/no_album_art.png', 'r').read()
+        jpeg_byte_string = open('flaskapp/static/images/no_album_art.png', 'r').read()
     return jpeg_byte_string, mime_
 
 
@@ -124,7 +124,11 @@ def pause_unpause():
     This method is for pausing and un-pausing the alsaplayer
     :return: True if successfully paused or un-paused.
     """
-    out = run_cmd('alsaplayer --pause')
+    if get_status()['status']['session']['speed'] == '0%':
+        run_cmd('alsaplayer --pause')
+        out = run_cmd('alsaplayer --speed 1.0')
+    else:
+        out = run_cmd('alsaplayer --pause')
     if NO_ACTIVE_SESSIONS in out or NOTHING_TO_PLAY in out:
         return False
     return True
@@ -222,7 +226,50 @@ def parse_status(status_):
                 key_ = prop[0]
                 value_ = prop[1]
                 parsed['session'][key_] = value_.lstrip()
+
+    if 'current_track' in parsed:
+        if 'title' not in parsed['current_track']:
+            if 'path' in parsed['current_track']:
+                parsed['current_track']['title'] = parsed['current_track']['path'].split('/')[-1]
+        parsed['current_track']['length_mins'] = conv_to_mins(parsed['current_track']['length'].split(' ')[0])
     return parsed
+
+
+def conv_to_mins(seconds):
+    mins = int(seconds) / 60
+    secs = int(seconds) % 60
+    mins_str = str(mins)
+    secs_str = str(secs)
+    if mins < 10:
+        mins_str = '0' + mins_str
+    if secs < 10:
+        secs_str = '0' + secs_str
+    return mins_str + ':' + secs_str
+
+
+def get_files_in_path(path_='~/Music'):
+    import os
+    user = os.path.abspath('.').split(os.sep)[2]
+    if '~/' in path_:
+        path_ = path_.replace('~/', '/home/' + user + '/')
+    files_dict = {}
+    dirs_dict = {}
+    for dirname, dirnames, filenames in os.walk(path_):
+        # print path to all subdirectories first.
+        for subdirname in dirnames:
+            if subdirname.startswith('.'):
+                continue
+                # print path to all filenames.
+            dirs_dict[os.path.join(dirname, subdirname)] = subdirname
+        for filename in filenames:
+            if filename.endswith('.mp3'):
+                files_dict[os.path.join(dirname, filename)] = filename
+        # Advanced usage:
+        # editing the 'dirnames' list will stop os.walk() from recursing into there.
+        if '.git' in dirnames:
+            # don't go into any .git directories.
+            dirnames.remove('.git')
+    return files_dict, dirs_dict
 
 
 def get_daemon_status():
