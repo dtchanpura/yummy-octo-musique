@@ -158,8 +158,18 @@ def download_song():
     sng_path = os.sep.join(song_path.split('/')[:-1])
     flname = song_path.split('/')[-1]
     app.logger.debug('flname = '+flname + ' sng_path= '+ sng_path)
-    return send_from_directory(directory=sng_path, filename = flname)
+    file_size = os.path.getsize(song_path)
+    response = send_from_directory(directory=sng_path, filename = flname)
+    response.headers['Content-Description'] = 'File Transfer'
+    response.headers['Cache-Control'] = 'no-cache'
+    response.headers['Content-Type'] = 'application/octet-stream'
+    response.headers['Content-Disposition'] = 'attachment; filename=%s' % flname
+    response.headers['Content-Length'] = file_size
+    return response
     #return Response(response=song_response, mimetype=mime_type)
+
+def get_file_size(filename):
+    import os
 
 def check_token(request_):
     if 'token' not in request_.json:
