@@ -166,10 +166,6 @@ def download_song():
     response.headers['Content-Disposition'] = 'attachment; filename=%s' % flname
     response.headers['Content-Length'] = file_size
     return response
-    #return Response(response=song_response, mimetype=mime_type)
-
-def get_file_size(filename):
-    import os
 
 def check_token(request_):
     if 'token' not in request_.json:
