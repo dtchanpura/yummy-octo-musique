@@ -14,3 +14,7 @@ SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 SECRET_KEY = u'AV3#%$2SDvbW#BFNsdsba@2123wev'
 TMP_FOLDER = u'tmp/'
 SQLALCHEMY_TRACK_MODIFICATIONS=True
+PORT=8000
+IP='0.0.0.0'
+APP_NAME='flaskapp'
+HOST_NAME='localhost'

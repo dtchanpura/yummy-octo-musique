@@ -1,4 +1,4 @@
-from flask import jsonify, request, Response
+from flask import jsonify, request, Response, send_from_directory
 from flask_cors import cross_origin
 
 from flaskapp import app, db
@@ -151,6 +151,15 @@ def get_token():
         return jsonify({'ok': False, 'error': 'username or password invalid'})
     return jsonify({'ok': True, 'token': user.token, 'username': user.username})
 
+@app.route('/download_song')
+def download_song():
+    import os
+    song_path = functions.get_current_song_path()
+    sng_path = os.sep.join(song_path.split('/')[:-1])
+    flname = song_path.split('/')[-1]
+    app.logger.debug('flname = '+flname + ' sng_path= '+ sng_path)
+    return send_from_directory(directory=sng_path, filename = flname)
+    #return Response(response=song_response, mimetype=mime_type)
 
 def check_token(request_):
     if 'token' not in request_.json:

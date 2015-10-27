@@ -271,6 +271,13 @@ def get_files_in_path(path_='~/Music'):
             dirnames.remove('.git')
     return files_dict, dirs_dict
 
+def get_current_song_path():
+    try:
+        path_ = get_status()['status']['current_track']['path']
+        return path_.replace('//', '/')
+    except Exception as e:
+        app.logger.error(e)
+        pass
 
 def get_daemon_status():
     """
