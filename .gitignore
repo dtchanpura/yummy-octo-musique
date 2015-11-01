@@ -3,6 +3,5 @@
 .idea
 app.db
 venv
-Makefile
 *.save
 STDLOG

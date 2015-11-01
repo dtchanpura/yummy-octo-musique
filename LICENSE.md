@@ -1,4 +1,4 @@
-Yummy Octo Musique a simple Web based music player
+Yummy Octo Musique a simple Web based music remote backend API
 Copyright (C) 2015 Darshil Chanpura
 
 This program is free software: you can redistribute it and/or modify

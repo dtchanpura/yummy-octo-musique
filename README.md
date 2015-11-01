@@ -1,4 +1,4 @@
-# Yummy Octo Musique 
+# Yummy Octo Musique
 
 [![Build Status](https://travis-ci.org/dtchanpura/yummy-octo-musique.svg?branch=master)](https://travis-ci.org/dtchanpura/yummy-octo-musique)
 
@@ -14,9 +14,9 @@ Right now it is using simple commands to control the alsaplayer in terminal but 
 ####Objects:
 `status` Object:
 ```json
-{	
-	"current_track": current_track,
-	"session": session
+{
+	"current_track": "current_track_obj",
+	"session": "session_obj"
 }
 ```
 `current_track` Object:
@@ -32,7 +32,7 @@ Right now it is using simple commands to control the alsaplayer in terminal but 
 	* Returns: `{"ok": true/false, "error": message}` error is displayed only if username is duplicated or invalid. Currently no limitations set on password.
 * get_token [POST]:
  	* Params: `{"username": username, "password": password}`
-	* Returns: `{"ok": true/false, "error": message}` 
+	* Returns: `{"ok": true/false, "error": message}`
 * start_daemon [POST]:
 	* This function is to start the alsaplayer in daemon mode.
 	* Params: `{"token": token}`
@@ -44,7 +44,7 @@ Right now it is using simple commands to control the alsaplayer in terminal but 
 * status [GET]:
 	* This is basic function which returns the status of the alsaplayer. This return structure may change in future.
 	* Params: None
-	* Returns: 
+	* Returns:
 	```{"ok": ok, "status":status}```
 * queue [POST]:
 * action [POST]:
