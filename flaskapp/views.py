@@ -53,9 +53,7 @@ def play():
     flag = functions.get_daemon_status()
     if not flag:
         functions.start_daemon()
-    if functions.start_main():
-        data['ok'] = True
-        data['daemon'] = functions.get_daemon_status()
+    data['daemon'] = functions.get_daemon_status()
     return jsonify(data), 200
 
 
@@ -118,6 +116,8 @@ def quit_daemon():
 def get_album_art():
     image_response, mime_type = functions.get_album_art()
     return Response(response=image_response, mimetype=mime_type)
+
+
 #    except Exception as e:
 #        app.logger.error(e.message)
 #        jpeg_byte_string = open('flaskapp/static/images/no_album_art.png', 'r').read()
@@ -151,21 +151,28 @@ def get_token():
         return jsonify({'ok': False, 'error': 'username or password invalid'})
     return jsonify({'ok': True, 'token': user.token, 'username': user.username})
 
+
+@app.route('/upload_song')
+def upload_song():
+    pass
+
+
 @app.route('/download_song')
 def download_song():
     import os
     song_path = functions.get_current_song_path()
     sng_path = os.sep.join(song_path.split('/')[:-1])
-    flname = song_path.split('/')[-1]
-    app.logger.debug('flname = '+flname + ' sng_path= '+ sng_path)
+    file_name = song_path.split('/')[-1]
+    app.logger.debug('file_name = ' + file_name + ' sng_path= ' + sng_path)
     file_size = os.path.getsize(song_path)
-    response = send_from_directory(directory=sng_path, filename = flname)
+    response = send_from_directory(directory=sng_path, filename=file_name)
     response.headers['Content-Description'] = 'File Transfer'
     response.headers['Cache-Control'] = 'no-cache'
     response.headers['Content-Type'] = 'application/octet-stream'
-    response.headers['Content-Disposition'] = 'attachment; filename=%s' % flname
+    response.headers['Content-Disposition'] = 'attachment; filename=%s' % file_name
     response.headers['Content-Length'] = file_size
     return response
+
 
 def check_token(request_):
     if 'token' not in request_.json:
