@@ -56,18 +56,16 @@ def get_album_art(session_id=0):
     return jpeg_byte_string, mime_
 
 
-def queue_tracks(path, session_id=0):
+def queue_tracks(path_, session_id=0):
     """
     Queuing tracks for alsaplayer -e
-    :param path: Path which it has to queue tracks from
+    :param path_: Path which it has to queue tracks from
     :param session_id: Session's ID
     :type session_id: int
     :return:
     """
-    if alsaplayer.add_and_play(session_id, path) == 1:
-        return True
-    return False
-
+    app.logger.info(path_)
+    return alsaplayer.add_and_play(session_id, str(path_)) == 1
 
 def pause_unpause(session_id=0):
     """
