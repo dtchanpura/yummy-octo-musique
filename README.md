@@ -9,7 +9,7 @@ Right now it is using simple commands to control the alsaplayer in terminal but 
 1. alsaplayer Github repo for python module
 1. libboost for building python module
 
-### Objects:
+## Objects:
 `status` Object:
 ```json
 {
@@ -23,7 +23,7 @@ Right now it is using simple commands to control the alsaplayer in terminal but 
 `session` Object:
 
 
-### Functions:
+## Functions:
 * register [POST]:
 	* This is to register with username and password to get a token generated.
 	* Params: `{"username": username, "password": password}`
