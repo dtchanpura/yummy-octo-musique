@@ -138,7 +138,7 @@ def get_status(session_id=0):
         "session": {
             "name": session_name,
             # "playlist_length": playlist_length,
-            "speed": "%f%" % speed * 100,
+            "speed": "%s%s" % (speed * 100, '%'),
             "volume": volume_level
         }
 
