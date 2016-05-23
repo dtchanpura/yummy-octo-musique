@@ -20,7 +20,7 @@ def run_cmd(cmd):
 
 def start_daemon():
     """
-    This method starts the Alsaplayer in Daemon mode.
+    This method starts the alsaplayeraplayer in Daemon mode.
     :return: True if execution successful
     """
     cmd = 'alsaplayer -i daemon > /dev/null 2>&1 &'
@@ -44,7 +44,7 @@ def get_album_art(session_id=0):
     # jpeg_byte_string = None
     mime_ = 'image/png'
     try:
-        images = get_metadata(alsaplayer.get_file_path_for_track(session_id)).tag.images
+        images = get_metadata(alsaplayer.get_file_path(session_id)).tag.images
         if len(images) > 0:
             jpeg_byte_string = images[0].image_data
             mime_ = images[0].mime_type
