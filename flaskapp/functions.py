@@ -123,11 +123,17 @@ def get_status(session_id=0):
     playlist = alsaplayer.get_playlist_length(session_id)
     speed = alsaplayer.get_speed(session_id)
     volume_level = alsaplayer.get_volume(session_id)
+    song_title = alsaplayer.get_title(session_id)
+    song_artist = alsaplayer.get_artist(session_id)
+    song_album = alsaplayer.get_album(session_id)
     status = {
         "current_track": {
             "length_mins": conv_to_mins(length),
             "length": length,
-            "position": position
+            "position": position,
+            "title": song_title,
+            "album": song_album,
+            "artist": song_artist
         },
         "session": {
             "name": session_name,
