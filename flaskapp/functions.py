@@ -28,7 +28,6 @@ def start_daemon():
     return True
 
 
-
 def get_metadata(file_name):
     """
     This method gets the metadata from file
@@ -67,18 +66,16 @@ def queue_tracks(path_, session_id=0):
     app.logger.info(path_)
     return alsaplayer.add_and_play(session_id, str(path_)) == 1
 
+
 def pause_unpause(session_id=0):
     """
     This method is for pausing and un-pausing the alsaplayer
     :return: True if successfully paused or un-paused.
     """
-    if alsaplayer.get_speed() == 0:
-        if alsaplayer.unpause(session_id) == 1:
-            return True
+    if alsaplayer.get_speed(session_id) == 0:
+        return alsaplayer.unpause(session_id) == 1
     else:
-        if alsaplayer.pause(session_id) == 1:
-            return True
-    return False
+        return alsaplayer.pause(session_id) == 1
 
 
 def next_song(session_id=0):
@@ -86,9 +83,7 @@ def next_song(session_id=0):
     This method is to jump to next song
     :return: True if successfully changed the song to next
     """
-    if alsaplayer.next(session_id) == 1:
-        return True
-    return False
+    return alsaplayer.next(session_id) == 1
 
 
 def prev_song(session_id=0):

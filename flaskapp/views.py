@@ -37,9 +37,10 @@ def start():
     if return_type is not None:
         return return_type
     data = {'ok': False}
-    if functions.start_daemon():
-        data['ok'] = True
-        data['daemon'] = functions.get_daemon_status()
+    if not functions.get_daemon_status():
+        if functions.start_daemon():
+            data['ok'] = True
+            data['daemon'] = functions.get_daemon_status()
     return jsonify(data), 200
 
 
