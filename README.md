@@ -1,7 +1,5 @@
 # Yummy Octo Musique
 
-[![Build Status](https://travis-ci.org/dtchanpura/yummy-octo-musique.svg?branch=master)](https://travis-ci.org/dtchanpura/yummy-octo-musique)
-
 Music Player for Remote devices.
 
 This is a start for using Alsaplayer to make it work with Raspberry Pi and make a simple API that could share status and perform operations like play, pause, navigation, etc.
@@ -11,7 +9,7 @@ Right now it is using simple commands to control the alsaplayer in terminal but 
 1. alsaplayer Github repo for python module
 1. libboost for building python module
 
-####Objects:
+### Objects:
 `status` Object:
 ```json
 {
@@ -25,7 +23,7 @@ Right now it is using simple commands to control the alsaplayer in terminal but 
 `session` Object:
 
 
-####Functions:
+### Functions:
 * register [POST]:
 	* This is to register with username and password to get a token generated.
 	* Params: `{"username": username, "password": password}`

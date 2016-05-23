@@ -25,6 +25,7 @@ def start_daemon():
     """
     cmd = 'alsaplayer -i daemon > /dev/null 2>&1 &'
     run_cmd(cmd)
+    return True
 
 
 
