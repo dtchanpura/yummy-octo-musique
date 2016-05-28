@@ -116,16 +116,29 @@ def get_status(session_id=0):
     :type session_id: int
     :return: dict
     """
-    length = alsaplayer.get_length(session_id)
-    position = alsaplayer.get_position(session_id)
-    session_name = alsaplayer.get_session_name(session_id)
-    # playlist = alsaplayer.get_playlist(session_id)
-    playlist = alsaplayer.get_playlist_length(session_id)
-    speed = alsaplayer.get_speed(session_id)
-    volume_level = alsaplayer.get_volume(session_id)
-    song_title = alsaplayer.get_title(session_id)
-    song_artist = alsaplayer.get_artist(session_id)
-    song_album = alsaplayer.get_album(session_id)
+    length = 0
+    position = 0
+    session_name = 'none'
+    playlist_length = 0
+    speed = 0
+    volume_level = 1
+    song_title = ''
+    song_artist = ''
+    song_album = ''
+    try:
+        length = alsaplayer.get_length(session_id)
+        position = alsaplayer.get_position(session_id)
+        session_name = alsaplayer.get_session_name(session_id)
+        # playlist = alsaplayer.get_playlist(session_id)
+        playlist_length = alsaplayer.get_playlist_length(session_id)
+        speed = alsaplayer.get_speed(session_id)
+        volume_level = alsaplayer.get_volume(session_id)
+        song_title = alsaplayer.get_title(session_id)
+        song_artist = alsaplayer.get_artist(session_id)
+        song_album = alsaplayer.get_album(session_id)
+    except Exception as e:
+        app.logger.error(e)
+    
     status = {
         "current_track": {
             "length_mins": conv_to_mins(length),
@@ -137,7 +150,7 @@ def get_status(session_id=0):
         },
         "session": {
             "name": session_name,
-            # "playlist_length": playlist_length,
+            "playlist_length": playlist_length,
             "speed": "%s%s" % (speed * 100, '%'),
             "volume": volume_level
         }
@@ -197,7 +210,11 @@ def get_daemon_status(session_id=0):
     """
     :return:
     """
-    return alsaplayer.session_running(session_id)
+    try:
+        return alsaplayer.session_running(session_id)
+    except Exception as e:
+        app.logger.error(e)
+        return False
 
 
 def quit_daemon(session_id=0):

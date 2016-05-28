@@ -6,6 +6,12 @@ from flaskapp import functions
 from flaskapp.models import User
 
 
+@app.route('/check')
+@cross_origin
+def check():
+    return '{"ok":true}', 200
+
+
 @app.route('/register', methods=['POST'])
 @cross_origin()
 def register():
