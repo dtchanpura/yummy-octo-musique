@@ -7,7 +7,7 @@ from flaskapp.models import User
 
 
 @app.route('/check')
-@cross_origin
+@cross_origin()
 def check():
     return '{"ok":true}', 200
 
