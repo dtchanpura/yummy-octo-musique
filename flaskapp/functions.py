@@ -23,8 +23,10 @@ def start_daemon():
     This method starts the alsaplayeraplayer in Daemon mode.
     :return: True if execution successful
     """
+    from time import sleep
     cmd = 'alsaplayer -i daemon > /dev/null 2>&1 &'
     run_cmd(cmd)
+    sleep(0.5)
     return True
 
 
