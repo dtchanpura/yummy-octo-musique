@@ -96,7 +96,7 @@ def prev_song(session_id=0):
 
 def volume(volume_level, session_id=0):
     """
-    :param volume_level: Represents Volume level and it should be in range 1 - 100
+    :param volume_level: Represents Volume level and it should be in range 0, 1
     :param session_id: Session ID
     :return:
     """
@@ -134,7 +134,7 @@ def get_status(session_id=0):
         # playlist = alsaplayer.get_playlist(session_id)
         playlist_length = alsaplayer.get_playlist_length(session_id)
         speed = alsaplayer.get_speed(session_id)
-        volume_level = alsaplayer.get_volume(session_id)
+        volume_level = float(int(alsaplayer.get_volume(session_id) * 100)/100)
         song_title = alsaplayer.get_title(session_id)
         song_artist = alsaplayer.get_artist(session_id)
         song_album = alsaplayer.get_album(session_id)

@@ -98,7 +98,7 @@ def do_action():
             data['ok'] = functions.next_song()
         elif action == 'previous':
             data['ok'] = functions.prev_song()
-        elif action == 'volume':
+        elif action == 'volume' and 'volume' in request.json:
             data['ok'] = functions.volume(request.json['volume'])
     data['daemon'] = functions.get_daemon_status()
     return jsonify(data), 200
