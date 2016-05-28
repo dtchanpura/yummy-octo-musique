@@ -65,6 +65,11 @@ def queue_tracks(path_, session_id=0):
     :type session_id: int
     :return:
     """
+    if '~/' in path_:
+        import os
+        user = os.path.abspath('.').split(os.sep)[2]
+        path_ = path_.replace('~/', '/home/' + user + '/')
+
     app.logger.info(path_)
     return alsaplayer.add_and_play(session_id, str(path_)) == 1
 
