@@ -201,7 +201,7 @@ def get_files_in_path(path_='~/Music'):
 
 def get_current_song_path(session_id=0):
     try:
-        path_ = alsaplayer.get_file_path_for_track(session_id)
+        path_ = alsaplayer.get_file_path(session_id)
         return path_.replace('//', '/')
     except Exception as e:
         app.logger.error(e)
