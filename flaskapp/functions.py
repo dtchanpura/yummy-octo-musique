@@ -42,16 +42,16 @@ def get_metadata(file_name):
 def get_album_art(session_id=0):
     # jpeg_byte_string = None
     mime_ = 'image/png'
-    try:
-        images = get_metadata(alsaplayer.get_file_path(session_id)).tag.images
-        if len(images) > 0:
-            jpeg_byte_string = images[0].image_data
-            mime_ = images[0].mime_type
-        else:
-            jpeg_byte_string = open('flaskapp/static/images/no_album_art.png', 'r').read()
-    except Exception as e:
-        app.logger.error(e)
-        jpeg_byte_string = open('flaskapp/static/images/no_album_art.png', 'r').read()
+    # try:
+    images = get_metadata(alsaplayer.get_file_path(session_id)).tag.images
+    if len(images) > 0:
+        jpeg_byte_string = images[0].image_data
+        mime_ = images[0].mime_type
+    else:
+        raise Exception('no album art')
+    # except Exception as e:
+    #     app.logger.error(e)
+    #     jpeg_byte_string = open('flaskapp/static/images/no_album_art.png', 'r').read()
     return jpeg_byte_string, mime_
 
 
@@ -138,7 +138,7 @@ def get_status(session_id=0):
         song_album = alsaplayer.get_album(session_id)
     except Exception as e:
         app.logger.error(e)
-    
+
     status = {
         "current_track": {
             "length_mins": conv_to_mins(length),
@@ -218,6 +218,5 @@ def get_daemon_status(session_id=0):
 
 
 def quit_daemon(session_id=0):
-    if alsaplayer.quit(session_id):
-        return True
-    return False
+    alsaplayer.quit(session_id)
+    return True

@@ -121,9 +121,11 @@ def quit_daemon():
 
 @app.route('/album_art')
 def get_album_art():
-    image_response, mime_type = functions.get_album_art()
-    return Response(response=image_response, mimetype=mime_type)
-
+    try:
+        image_response, mime_type = functions.get_album_art()
+        return Response(response=image_response, mimetype=mime_type)
+    except Exception as e:
+        return app.send_static_file('images/no_album_art.png')
 
 #    except Exception as e:
 #        app.logger.error(e.message)
