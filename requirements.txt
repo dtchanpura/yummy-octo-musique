@@ -13,4 +13,4 @@ SQLAlchemy>=1.0.9
 sqlalchemy-migrate>=0.10.0
 sqlparse==0.1.18
 Tempita==0.5.2
-Werkzeug==0.15.5
+Werkzeug==2.2.3
